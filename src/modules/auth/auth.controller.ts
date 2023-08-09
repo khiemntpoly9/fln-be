@@ -42,23 +42,26 @@ export class AuthController {
 	@Post('register')
 	async registerAuth(@Body() authDto: authDto, @Res() res: Response) {
 		try {
-			const register = await this.authService.registerAuth(authDto);
+			await this.authService.registerAuth(authDto);
 			return res.status(HttpStatus.OK).json({ message: 'Đăng ký thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	// Đăng nhập Passport
+	// Đăng nhập Passport Local
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	async login(@Req() req: Request, @Res() res: Response) {
 		try {
 			const token = await this.authService.login(req.user);
-			return res
-				.status(HttpStatus.OK)
-				.cookie('access_token', token, { httpOnly: true, sameSite: 'none', secure: true })
-				.json({ message: 'Đăng nhập thành công!' });
+			return (
+				res
+					.status(HttpStatus.OK)
+					// .cookie('access_token', token, { httpOnly: true, sameSite: 'none', secure: true })
+					.header('Authorization', `Bearer ${token}`)
+					.json({ message: 'Đăng nhập thành công!' })
+			);
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

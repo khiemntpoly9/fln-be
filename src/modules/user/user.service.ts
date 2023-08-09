@@ -35,14 +35,7 @@ export class UserService {
 			const findEmailUser = await this.userRepository
 				.createQueryBuilder('users')
 				.leftJoinAndSelect('users.role', 'role')
-				.select([
-					'users.id',
-					'users.full_name',
-					'users.email',
-					'users.password',
-					'users.verify_at',
-					'role.short_role',
-				])
+				.select(['users.id', 'users.full_name', 'users.email', 'users.password', 'role.short_role'])
 				.where('users.email = :email', { email })
 				.getOne();
 			return findEmailUser;
@@ -111,7 +104,7 @@ export class UserService {
 	// Lưu & refesh token tài khoản
 	saveTokenUser(email: string, token: string | null) {
 		try {
-			const saveToken = this.userRepository
+			this.userRepository
 				.createQueryBuilder('users')
 				.update(User)
 				.set({ token: token })
@@ -205,16 +198,7 @@ export class UserService {
 			const listUser = await this.userRepository
 				.createQueryBuilder('users')
 				.leftJoinAndSelect('users.role', 'role')
-				.select([
-					'users.id_user',
-					'users.first_name',
-					'users.last_name',
-					'users.email',
-					'users.phone',
-					'users.verify_at',
-					'role.name_role',
-					'users.createdAt',
-				])
+				.select(['users.id', 'users.full_name', 'users.email', 'role.name_role', 'users.createdAt'])
 				.getMany();
 			return listUser;
 		} catch (error) {

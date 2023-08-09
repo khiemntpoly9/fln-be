@@ -1,5 +1,4 @@
 export enum Role {
-	QTV = 'qtv',
-	CTV = 'ctv',
+	QTV = 'admin',
 	User = 'user',
 }

@@ -39,18 +39,17 @@ export class AuthService {
 			newUser.email
 			timeExpires
 			*/
-			const newUserToken = {
-				userId: newUser.id,
-				email: newUser.email,
-			};
-			// Verify token
-			const verify_token = await this.jwtService.signAsync(newUserToken, {
-				secret: jwtVerify.secret,
-				expiresIn: '24h',
-			});
-			// Gửi Email
+			// const newUserToken = {
+			// 	userId: newUser.id,
+			// 	email: newUser.email,
+			// };
+			/* Verify token */
+			// const verify_token = await this.jwtService.signAsync(newUserToken, {
+			// 	secret: jwtVerify.secret,
+			// 	expiresIn: '24h',
+			// });
+			/* Gửi Email */
 			// this.mailService.sendMailVerify(newUser.email, newUser.last_name, verify_token);
-			// End
 		} catch (error) {
 			throw new Error(error);
 		}
@@ -83,10 +82,9 @@ export class AuthService {
 	// Đăng nhập Passport
 	async login(user: any) {
 		const payload = {
-			userId: user.id_user,
+			userId: user.id,
 			email: user.email,
 			role: user.role.short_role,
-			verify_at: user.verify_at,
 		};
 		const access_token = await this.jwtService.signAsync(payload);
 		// Lưu token vào db user

@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm';
+import { Role } from './role.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -25,4 +34,8 @@ export class User {
 
 	@UpdateDateColumn()
 	updatedAt: Date;
+
+	@ManyToOne(() => Role, (role) => role.user)
+	@JoinColumn({ name: 'id_role', referencedColumnName: 'id_role' })
+	role: Role;
 }

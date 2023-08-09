@@ -33,7 +33,7 @@ export class UserController {
 	constructor(private userService: UserService) {}
 
 	// Lấy thông tin tài khoản
-	@Roles(Role.User, Role.CTV, Role.QTV)
+	@Roles(Role.User, Role.QTV)
 	@UseGuards(JwtAuthGuard)
 	@Get('profile')
 	async proficeUser(@Req() req: User) {
@@ -60,7 +60,7 @@ export class UserController {
 	// }
 
 	// Xoá tài khoản
-	@Roles(Role.User, Role.CTV, Role.QTV)
+	@Roles(Role.User, Role.QTV)
 	@UseGuards(JwtAuthGuard)
 	@Post('delete')
 	async deleteUser(@Body() password: string, @Res() res: Response, @Req() req: User) {

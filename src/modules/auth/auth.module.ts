@@ -18,7 +18,7 @@ import { MailService } from '../mail/mail.service';
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([User]),
-		JwtModule.register({ global: true, secret: jwtConstants.secret, signOptions: { expiresIn: '24h' } }),
+		JwtModule.register({ global: true, secret: jwtConstants.secret, signOptions: { expiresIn: '12h' } }),
 		UserModule,
 		PassportModule,
 	],

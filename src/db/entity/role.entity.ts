@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
-Entity('role');
+@Entity({ name: 'role' })
 export class Role {
 	@PrimaryGeneratedColumn({ type: 'int' })
 	id_role: number;
@@ -10,4 +11,8 @@ export class Role {
 
 	@Column({ type: 'varchar', length: 10 })
 	short_role: string;
+
+	@OneToMany(() => User, (user) => user.role)
+	@JoinColumn({ name: 'id_role', referencedColumnName: 'id_role' })
+	user: User[];
 }
