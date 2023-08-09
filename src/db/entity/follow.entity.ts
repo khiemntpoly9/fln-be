@@ -5,9 +5,9 @@ export class Follow {
 	@PrimaryGeneratedColumn({ type: 'bigint' })
 	id_rate: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_user: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_novel: number;
 }

@@ -5,13 +5,13 @@ export class Rate {
 	@PrimaryGeneratedColumn({ type: 'bigint' })
 	id_rate: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_user: number;
 
 	@Column({ type: 'text', nullable: true })
 	comment: string;
 
-	@Column({ type: 'int', length: 2 })
+	@Column({ type: 'int' })
 	point: number;
 
 	@CreateDateColumn()

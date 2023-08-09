@@ -3,13 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class authDto {
 	@ApiProperty()
-	first_name: string;
-
-	@ApiProperty()
-	last_name: string;
-
-	@ApiProperty()
-	phone: string;
+	full_name: string;
 
 	@ApiProperty()
 	email: string;

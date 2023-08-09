@@ -5,7 +5,7 @@ export class Team {
 	@PrimaryGeneratedColumn({ type: 'bigint' })
 	id_team: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_user: number;
 
 	@Column({ type: 'varchar', length: 255 })

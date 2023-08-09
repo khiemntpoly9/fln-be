@@ -29,12 +29,9 @@ export class AuthService {
 			const hashedPassword = await bcrypt.hash(authDto.password, salt);
 			// User
 			const user = new User();
-			user.first_name = authDto.first_name;
-			user.last_name = authDto.last_name;
-			user.phone = authDto.phone;
+			user.full_name = authDto.full_name;
 			user.email = authDto.email;
 			user.password = hashedPassword;
-			user.verify_at = null;
 			// Save User
 			const newUser = await this.userService.saveUser(user);
 			/*
@@ -43,7 +40,7 @@ export class AuthService {
 			timeExpires
 			*/
 			const newUserToken = {
-				userId: newUser.id_user,
+				userId: newUser.id,
 				email: newUser.email,
 			};
 			// Verify token
@@ -52,7 +49,7 @@ export class AuthService {
 				expiresIn: '24h',
 			});
 			// Gửi Email
-			this.mailService.sendMailVerify(newUser.email, newUser.last_name, verify_token);
+			// this.mailService.sendMailVerify(newUser.email, newUser.last_name, verify_token);
 			// End
 		} catch (error) {
 			throw new Error(error);
@@ -115,31 +112,30 @@ export class AuthService {
 	}
 
 	// Xác thực đăng nhập Google
-	async googleLogin(req: {
-		user: { email: string; firstName: string; lastName: string; accessToken: string; refreshToken: string };
-	}): Promise<string> {
-		if (!req.user) {
-			throw new Error('No user from google!');
-		}
-		// Kiểm tra user
-		const user = await this.userService.checkUserEmail(req.user.email);
-		if (!user) {
-			// Đăng ký nhanh cho user chưa tồn tại
-			const user = await this.userService.registerUser(req.user);
-		}
-		// Token
-		const payload = {
-			userId: user.id_user,
-			email: user.email,
-			role: user.role.short_role,
-			verify: user.verify_at,
-		};
-		const access_token = await this.jwtService.signAsync(payload);
-		// Lưu token vào db user
-		const saveToken = this.userService.saveTokenUser(user.email, access_token);
-		// Trả về token
-		return access_token;
-	}
+	// async googleLogin(req: {
+	// 	user: { email: string; firstName: string; lastName: string; accessToken: string; refreshToken: string };
+	// }): Promise<string> {
+	// 	if (!req.user) {
+	// 		throw new Error('No user from google!');
+	// 	}
+	// 	// Kiểm tra user
+	// 	const user = await this.userService.checkUserEmail(req.user.email);
+	// 	if (!user) {
+	// 		// Đăng ký nhanh cho user chưa tồn tại
+	// 		const user = await this.userService.registerUser(req.user);
+	// 	}
+	// 	// Token
+	// 	const payload = {
+	// 		userId: user.id,
+	// 		email: user.email,
+	// 		role: user.role.short_role,
+	// 	};
+	// 	const access_token = await this.jwtService.signAsync(payload);
+	// 	// Lưu token vào db user
+	// 	const saveToken = this.userService.saveTokenUser(user.email, access_token);
+	// 	// Trả về token
+	// 	return access_token;
+	// }
 
 	// Đăng xuất
 	async logoutAuth(email: string) {

@@ -17,8 +17,8 @@ export class LoggerMiddleware implements NestMiddleware {
 			// Check Verify
 			if (payload.verify_at == null) throw new UnauthorizedException('Bạn cần xác minh tài khoản!');
 			// payload.userId
-			const tokenUser = await this.userService.getTokenUser(payload.userId);
-			if (tokenUser == null) throw new UnauthorizedException('Bạn cần đăng nhập lại!');
+			// const tokenUser = await this.userService.getTokenUser(payload.userId);
+			// if (tokenUser == null) throw new UnauthorizedException('Bạn cần đăng nhập lại!');
 			// tokenUser.token
 			/* Refesh token
 			if (token !== tokenUser.token) {

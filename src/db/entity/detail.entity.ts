@@ -14,6 +14,6 @@ export class Detail {
 	@Column({ type: 'varchar', length: 255, nullable: true })
 	another_name: string;
 
-	@Column({ type: 'int', length: 1, default: 0 })
+	@Column({ type: 'int', default: 0 })
 	adult: number;
 }

@@ -46,18 +46,18 @@ export class UserController {
 	}
 
 	// Sửa thông tin tài khoản
-	@Roles(Role.User, Role.CTV, Role.QTV)
-	@UseGuards(JwtAuthGuard)
-	@Patch('update')
-	async updateUser(@Body() user: userDto, @Res() res: Response, @Req() req: User) {
-		try {
-			// Lấy data mới
-			const update = await this.userService.updateUser(req.user.userId, user);
-			return res.status(HttpStatus.OK).json({ message: 'Cập nhật tài khoản thành công!' });
-		} catch (error) {
-			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+	// @Roles(Role.User, Role.CTV, Role.QTV)
+	// @UseGuards(JwtAuthGuard)
+	// @Patch('update')
+	// async updateUser(@Body() user: userDto, @Res() res: Response, @Req() req: User) {
+	// 	try {
+	// 		// Lấy data mới
+	// 		const update = await this.userService.updateUser(req.user.userId, user);
+	// 		return res.status(HttpStatus.OK).json({ message: 'Cập nhật tài khoản thành công!' });
+	// 	} catch (error) {
+	// 		throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+	// 	}
+	// }
 
 	// Xoá tài khoản
 	@Roles(Role.User, Role.CTV, Role.QTV)
@@ -110,7 +110,7 @@ export class UserController {
 	@Patch('change-role')
 	async changeRole(@Body() user: userDto, @Res() res: Response) {
 		try {
-			const changeRole = await this.userService.changeRoleUser(user.id_user, user.id_role);
+			const changeRole = await this.userService.changeRoleUser(user.id, user.id_role);
 			// Đổi role, cập nhật token
 			return res.status(HttpStatus.OK).json({ message: 'Đổi role thành công!' });
 		} catch (error) {

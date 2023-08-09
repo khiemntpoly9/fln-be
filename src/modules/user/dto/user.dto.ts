@@ -3,19 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class userDto {
 	@ApiProperty()
-	id_user: number;
+	id: number;
 
 	@ApiProperty()
-	first_name: string;
-
-	@ApiProperty()
-	last_name: string;
+	full_name: string;
 
 	@ApiProperty()
 	email: string;
-
-	@ApiProperty()
-	phone: string;
 
 	@ApiProperty()
 	password: string;

@@ -123,64 +123,64 @@ export class AuthController {
 	}
 
 	// Google Auth Callback
-	@Get('google/redirect')
-	@UseGuards(GoogleGuard)
-	async handleRedirect(@Req() req: User, @Res() res: Response) {
-		try {
-			const token = await this.authService.googleLogin(req);
-			return res
-				.status(HttpStatus.OK)
-				.cookie('access_token', token, { httpOnly: true, sameSite: 'none', secure: true })
-				.redirect('http://localhost:3000/api/user/admin');
-		} catch (error) {
-			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+	// @Get('google/redirect')
+	// @UseGuards(GoogleGuard)
+	// async handleRedirect(@Req() req: User, @Res() res: Response) {
+	// 	try {
+	// 		const token = await this.authService.googleLogin(req);
+	// 		return res
+	// 			.status(HttpStatus.OK)
+	// 			.cookie('access_token', token, { httpOnly: true, sameSite: 'none', secure: true })
+	// 			.redirect('http://localhost:3000/api/user/admin');
+	// 	} catch (error) {
+	// 		throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+	// 	}
+	// }
 
 	/* Xác nhận tài khoản */
-	@Get('verify-account')
-	async verifyAccout(@Query('token') token: string, @Res() res: Response) {
-		const payload = await this.jwtService.verifyAsync(token, {
-			secret: jwtVerify.secret,
-		});
-		// Xử lý thời gian
-		const expirationDate = new Date(payload.exp * 1000);
-		const expirationTimeGMT7 = moment(expirationDate).tz('Asia/Ho_Chi_Minh').format();
-		const currentTime = moment();
-		const targetTime = moment(expirationTimeGMT7);
-		// Check time
-		if (!currentTime.isBefore(targetTime)) {
-			throw new Error('Token đã hết hạn!');
-		}
-		// Update Verify Accout
-		this.userService.verifyUser(payload.email);
-		return res.status(HttpStatus.OK).json({ message: 'Xác thực tài khoản thành công!' });
-	}
+	// @Get('verify-account')
+	// async verifyAccout(@Query('token') token: string, @Res() res: Response) {
+	// 	const payload = await this.jwtService.verifyAsync(token, {
+	// 		secret: jwtVerify.secret,
+	// 	});
+	// 	// Xử lý thời gian
+	// 	const expirationDate = new Date(payload.exp * 1000);
+	// 	const expirationTimeGMT7 = moment(expirationDate).tz('Asia/Ho_Chi_Minh').format();
+	// 	const currentTime = moment();
+	// 	const targetTime = moment(expirationTimeGMT7);
+	// 	// Check time
+	// 	if (!currentTime.isBefore(targetTime)) {
+	// 		throw new Error('Token đã hết hạn!');
+	// 	}
+	// 	// Update Verify Accout
+	// 	this.userService.verifyUser(payload.email);
+	// 	return res.status(HttpStatus.OK).json({ message: 'Xác thực tài khoản thành công!' });
+	// }
 
-	// Quên mật khẩu
-	@Post('recovery-pass')
-	async recoveryPass(@Body() data: { email: string }, @Res() res: Response) {
-		try {
-			// Nhận email
-			// Check xem tài khoản có tồn tại
-			const user = await this.userService.checkUserEmail(data.email);
-			if (!user) throw new Error('Tài khoản không tồn tại!');
-			const payload = {
-				userId: user.id_user,
-				email: user.email,
-			};
-			// Verify token
-			const verify_token = await this.jwtService.signAsync(payload, {
-				secret: jwtVerify.secret,
-				expiresIn: '24h',
-			});
-			// Send mail
-			this.mailService.sendMailRecoveryPass(data.email, user.last_name, verify_token);
-			return res.status(HttpStatus.OK).json({ message: 'Đã gửi mail!' });
-		} catch (error) {
-			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+	/* Quên mật khẩu */
+	// @Post('recovery-pass')
+	// async recoveryPass(@Body() data: { email: string }, @Res() res: Response) {
+	// 	try {
+	// 		// Nhận email
+	// 		// Check xem tài khoản có tồn tại
+	// 		const user = await this.userService.checkUserEmail(data.email);
+	// 		if (!user) throw new Error('Tài khoản không tồn tại!');
+	// 		const payload = {
+	// 			userId: user.id_user,
+	// 			email: user.email,
+	// 		};
+	// 		// Verify token
+	// 		const verify_token = await this.jwtService.signAsync(payload, {
+	// 			secret: jwtVerify.secret,
+	// 			expiresIn: '24h',
+	// 		});
+	// 		// Send mail
+	// 		this.mailService.sendMailRecoveryPass(data.email, user.last_name, verify_token);
+	// 		return res.status(HttpStatus.OK).json({ message: 'Đã gửi mail!' });
+	// 	} catch (error) {
+	// 		throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+	// 	}
+	// }
 
 	// Đổi mật khẩu
 	@Post('change-password')

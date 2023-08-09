@@ -17,28 +17,28 @@ export class Novel {
 	@Column({ type: 'varchar', length: 255 })
 	illustrator: string;
 
-	@Column({ type: 'bigint', length: 20, default: 0 })
+	@Column({ type: 'bigint', default: 0 })
 	views: number;
 
-	@Column({ type: 'int', length: 2 })
+	@Column({ type: 'int' })
 	status: number;
 
-	@Column({ type: 'int', length: 5 })
+	@Column({ type: 'int' })
 	id_categories: number;
 
-	@Column({ type: 'int', length: 3 })
+	@Column({ type: 'int' })
 	id_vol: number;
 
-	@Column({ type: 'bigint', length: 20, nullable: true })
+	@Column({ type: 'bigint', nullable: true })
 	id_rate: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_user: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_team: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_detail: number;
 
 	@CreateDateColumn()

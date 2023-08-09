@@ -9,12 +9,10 @@ import { AppService } from './app.service';
 import { dataSourceOptions } from './db/data-source';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { CategoriesModule } from './modules/categories/categories.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MailModule } from './modules/mail/mail.module';
 import { PassportModule } from '@nestjs/passport';
-import { ManagerModule } from './modules/manager/manager.module';
 /* */
 
 @Module({
@@ -23,11 +21,9 @@ import { ManagerModule } from './modules/manager/manager.module';
 		TypeOrmModule.forRoot(dataSourceOptions),
 		UserModule,
 		AuthModule,
-		CategoriesModule,
 		CloudinaryModule,
 		MailModule,
 		PassportModule,
-		ManagerModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

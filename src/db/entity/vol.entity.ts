@@ -5,7 +5,7 @@ export class Vol {
 	@PrimaryGeneratedColumn({ type: 'bigint' })
 	id_vol: number;
 
-	@Column({ type: 'bigint', length: 20 })
+	@Column({ type: 'bigint' })
 	id_chap: number;
 
 	@Column({ type: 'varchar', length: 255 })

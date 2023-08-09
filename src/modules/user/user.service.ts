@@ -20,14 +20,7 @@ export class UserService {
 		try {
 			const profile = await this.userRepository
 				.createQueryBuilder('users')
-				.select([
-					'users.id_user',
-					'users.first_name',
-					'users.last_name',
-					'users.email',
-					'users.phone',
-					'users.createdAt',
-				])
+				.select(['users.id', 'users.full_name', 'users.email', 'users.createdAt'])
 				.where('users.email = :email', { email })
 				.getOne();
 			return profile;
@@ -43,8 +36,8 @@ export class UserService {
 				.createQueryBuilder('users')
 				.leftJoinAndSelect('users.role', 'role')
 				.select([
-					'users.id_user',
-					'users.last_name',
+					'users.id',
+					'users.full_name',
 					'users.email',
 					'users.password',
 					'users.verify_at',
@@ -74,49 +67,46 @@ export class UserService {
 			.insert()
 			.into(User)
 			.values({
-				first_name: user.firstName,
-				last_name: user.lastName,
+				full_name: user.firstName + user.lastName,
 				email: user.email,
-				phone: null,
 				password: null,
-				verify_at: 1,
 			})
 			.execute();
 		return regUser;
 	}
 
 	// Sửa thông tin tài khoản
-	async updateUser(id: number, data: userDto): Promise<any> {
-		try {
-			const updateUser = await this.userRepository
-				.createQueryBuilder('users')
-				.update(User)
-				.set({
-					first_name: data.first_name,
-					last_name: data.last_name,
-					phone: data.phone,
-				})
-				.where('users.id_user = :id', { id })
-				.execute();
-			return updateUser;
-		} catch (error) {
-			throw new Error(error);
-		}
-	}
+	// async updateUser(id: number, data: userDto): Promise<any> {
+	// 	try {
+	// 		const updateUser = await this.userRepository
+	// 			.createQueryBuilder('users')
+	// 			.update(User)
+	// 			.set({
+	// 				first_name: data.first_name,
+	// 				last_name: data.last_name,
+	// 				phone: data.phone,
+	// 			})
+	// 			.where('users.id_user = :id', { id })
+	// 			.execute();
+	// 		return updateUser;
+	// 	} catch (error) {
+	// 		throw new Error(error);
+	// 	}
+	// }
 
 	// Lấy token tài khoản
-	async getTokenUser(id: number): Promise<any> {
-		try {
-			const getTokenUser = await this.userRepository
-				.createQueryBuilder('users')
-				.select(['users.token'])
-				.where('users.id_user = :id', { id })
-				.getOne();
-			return getTokenUser;
-		} catch (error) {
-			throw new Error(error);
-		}
-	}
+	// async getTokenUser(id: number): Promise<any> {
+	// 	try {
+	// 		const getTokenUser = await this.userRepository
+	// 			.createQueryBuilder('users')
+	// 			.select(['users.token'])
+	// 			.where('users.id_user = :id', { id })
+	// 			.getOne();
+	// 		return getTokenUser;
+	// 	} catch (error) {
+	// 		throw new Error(error);
+	// 	}
+	// }
 
 	// Lưu & refesh token tài khoản
 	saveTokenUser(email: string, token: string | null) {
@@ -133,19 +123,19 @@ export class UserService {
 	}
 
 	// Verify Account
-	async verifyUser(email: string): Promise<void> {
-		try {
-			const currentTimeStamp = new Date().getTime();
-			await this.userRepository
-				.createQueryBuilder('users')
-				.update(User)
-				.set({ verify_at: currentTimeStamp })
-				.where('email = :email', { email })
-				.execute();
-		} catch (error) {
-			throw new Error(error);
-		}
-	}
+	// async verifyUser(email: string): Promise<void> {
+	// 	try {
+	// 		const currentTimeStamp = new Date().getTime();
+	// 		await this.userRepository
+	// 			.createQueryBuilder('users')
+	// 			.update(User)
+	// 			.set({ verify_at: currentTimeStamp })
+	// 			.where('email = :email', { email })
+	// 			.execute();
+	// 	} catch (error) {
+	// 		throw new Error(error);
+	// 	}
+	// }
 
 	// Lưu mật khẩu mới
 	async savePassUser(email: string, password: string, token: string | null): Promise<void> {
