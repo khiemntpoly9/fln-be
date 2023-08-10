@@ -15,7 +15,7 @@ import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { authDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants, jwtVerify } from './constants';
+import { jwtConstants, jwtVerify, jwtRefreshToken } from './constants';
 import { GoogleGuard } from './guards/google.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import * as moment from 'moment-timezone';
@@ -54,34 +54,38 @@ export class AuthController {
 	@Post('login')
 	async login(@Req() req: Request, @Res() res: Response) {
 		try {
-			const token = await this.authService.login(req.user);
-			return (
-				res
-					.status(HttpStatus.OK)
-					// .cookie('access_token', token, { httpOnly: true, sameSite: 'none', secure: true })
-					.header('Authorization', `Bearer ${token}`)
-					.json({ message: 'Đăng nhập thành công!' })
-			);
-		} catch (error) {
-			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	// Đăng nhập
-	/* 
-	@Post('login/v1')
-	async loginAuth(@Body() authDto: authDto, @Res() res: Response) {
-		try {
-			const login = await this.authService.loginAuth(authDto);
+			const result = await this.authService.login(req.user);
 			return res
 				.status(HttpStatus.OK)
-				.cookie('access_token', login, { httpOnly: true })
+				.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'none', secure: true })
+				.header('Authorization', `Bearer ${result.accessToken}`)
 				.json({ message: 'Đăng nhập thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	*/
+
+	// Refresh Token
+	@Post('refresh')
+	async refreshToken(@Req() req: Request, @Res() res: Response) {
+		try {
+			const refreshToken = req.cookies['refreshToken'];
+			if (!refreshToken) {
+				throw new HttpException('Không tìm thấy refresh token!', HttpStatus.BAD_REQUEST);
+			}
+			const payload = await this.jwtService.verifyAsync(refreshToken, {
+				secret: jwtRefreshToken.secret,
+			});
+			console.log(payload);
+			const accessToken = await this.jwtService.signAsync(
+				{ userId: payload.userId },
+				{ secret: jwtConstants.secret, expiresIn: '1h' },
+			);
+			return res.status(HttpStatus.OK).header('Authorization', `Bearer test`).json({ accessToken });
+		} catch (error) {
+			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	// Check đăng nhập, role
 	@Get('check')

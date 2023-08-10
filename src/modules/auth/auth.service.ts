@@ -5,7 +5,7 @@ import { User } from 'src/db/entity/user.entity';
 import { authDto, authDtoGG } from './dto/auth.dto';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { jwtVerify } from './constants';
+import { jwtVerify, jwtRefreshToken, jwtConstants } from './constants';
 import { MailService } from '../mail/mail.service';
 
 const saltOrRounds = 10;
@@ -81,15 +81,27 @@ export class AuthService {
 
 	// Đăng nhập Passport
 	async login(user: any) {
-		const payload = {
+		/* Payload Access */
+		const payload_access = {
 			userId: user.id,
 			email: user.email,
 			role: user.role.short_role,
 		};
-		const access_token = await this.jwtService.signAsync(payload);
+		/* Payload Refresh */
+		const payload_refresh = {
+			userId: user.id,
+		};
+		const accessToken = await this.jwtService.signAsync(payload_access, {
+			secret: jwtConstants.secret,
+			expiresIn: '1h',
+		});
+		const refreshToken = await this.jwtService.signAsync(payload_refresh, {
+			secret: jwtRefreshToken.secret,
+			expiresIn: '24h',
+		});
 		// Lưu token vào db user
-		this.userService.saveTokenUser(user.email, access_token);
-		return access_token;
+		this.userService.saveTokenUser(user.email, refreshToken);
+		return { accessToken, refreshToken };
 	}
 
 	// Validate User Local
