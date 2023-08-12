@@ -90,6 +90,8 @@ export class AuthService {
 		/* Payload Refresh */
 		const payload_refresh = {
 			userId: user.id,
+			email: user.email,
+			role: user.role.short_role,
 		};
 		const accessToken = await this.jwtService.signAsync(payload_access, {
 			secret: jwtConstants.secret,

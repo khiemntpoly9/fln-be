@@ -58,8 +58,7 @@ export class AuthController {
 			return res
 				.status(HttpStatus.OK)
 				.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'none', secure: true })
-				.header('Authorization', `Bearer ${result.accessToken}`)
-				.json({ message: 'Đăng nhập thành công!' });
+				.json({ message: 'Đăng nhập thành công!', accessToken: result.accessToken });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -76,12 +75,11 @@ export class AuthController {
 			const payload = await this.jwtService.verifyAsync(refreshToken, {
 				secret: jwtRefreshToken.secret,
 			});
-			console.log(payload);
 			const accessToken = await this.jwtService.signAsync(
-				{ userId: payload.userId },
+				{ userId: payload.userId, email: payload.email, role: payload.role },
 				{ secret: jwtConstants.secret, expiresIn: '1h' },
 			);
-			return res.status(HttpStatus.OK).header('Authorization', `Bearer test`).json({ accessToken });
+			return res.status(HttpStatus.OK).json({ accessToken });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
