@@ -153,7 +153,7 @@ export class AuthService {
 	async logoutAuth(email: string) {
 		try {
 			// refesh token user
-			const refeshToken = this.userService.saveTokenUser(email, null);
+			this.userService.saveTokenUser(email, null);
 		} catch (error) {
 			throw new Error(error);
 		}

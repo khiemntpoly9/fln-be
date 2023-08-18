@@ -106,14 +106,14 @@ export class AuthController {
 	@Post('logout')
 	async logoutAuth(@Res() res: Response, @Req() req: Request) {
 		try {
-			const token = req.cookies['access_token'];
+			const token = req.cookies['refreshToken'];
 			const payload = await this.jwtService.verifyAsync(token, {
-				secret: jwtConstants.secret,
+				secret: jwtRefreshToken.secret,
 			});
-			const logout = await this.authService.logoutAuth(payload.email);
+			await this.authService.logoutAuth(payload.email);
 			return res
 				.status(HttpStatus.OK)
-				.clearCookie('access_token', { sameSite: 'none', secure: true })
+				.clearCookie('refreshToken', { sameSite: 'none', secure: true })
 				.json({ message: 'Đăng xuất thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
