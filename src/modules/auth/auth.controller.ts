@@ -89,12 +89,12 @@ export class AuthController {
 	@Get('check')
 	async checkAuth(@Req() req: Request, @Res() res: Response) {
 		try {
-			const token = req.cookies['access_token'];
+			const token = req.cookies['refreshToken'];
 			if (!token) {
 				return res.status(HttpStatus.OK).json({ isLogin: false });
 			}
 			const payload = await this.jwtService.verifyAsync(token, {
-				secret: jwtConstants.secret,
+				secret: jwtRefreshToken.secret,
 			});
 			return res.status(HttpStatus.OK).json({ isLogin: true, role: payload.role });
 		} catch (error) {
