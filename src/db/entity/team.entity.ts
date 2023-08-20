@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity({ name: 'team' })
 export class Team {
@@ -16,4 +17,8 @@ export class Team {
 
 	@CreateDateColumn()
 	createdAt: Date;
+
+	@ManyToMany(() => User, (user) => user.team)
+	@JoinColumn({ name: 'id_user', referencedColumnName: 'id_user' })
+	user: User;
 }
