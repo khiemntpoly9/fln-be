@@ -27,21 +27,17 @@ export class TeamService {
 		}
 	}
 	// Sửa thông tin team
-	// async updateTeam(id_team: number, data: teamDto): Promise<Team> {
-	// 	try {
-	// 		const updateTeam = await this.teamRepository
-	// 			.createQueryBuilder('teams')
-	// 			.update(Team)
-	// 			.set({
-	// 				team_name: data.team_name,
-	// 				team_detail: data.team_detail,
-	// 				// có j bổ sung giúp với  cái này ko rõ  :)))
-	// 			})
-	// 			.where('team.id_team = :id_team', { id_team })
-	// 			.execute();
-	// 		return updateTeam;
-	// 	} catch (error) {
-	// 		throw new Error(error);
-	// 	}
-	// }
+	async updateTeam(id_team: number, teamDto: Partial<teamDto>): Promise<Team> {
+		try {
+			//check team có tồn tài ko
+			const team = await this.teamRepository.findOneBy({id_team: id_team})
+			if(!team){
+				throw new Error('Không tìm thấy team');
+			}
+			Object.assign(team,teamDto);
+			return this.teamRepository.save(team);
+		} catch (error) {
+			throw new Error(error);
+		}
+	}
 }
