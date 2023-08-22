@@ -15,6 +15,9 @@ import {
 import { Request, Response } from 'express';
 import { TeamService } from './team.service';
 import { teamDto } from './dto/team.dto';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 interface User extends Request {
 	user: {
@@ -26,6 +29,19 @@ interface User extends Request {
 @Controller('team')
 export class TeamController {
 	constructor(private teamService: TeamService) {}
+
+	// Tạo team
+	@Roles(Role.QTV, Role.User)
+	@UseGuards(JwtAuthGuard)
+	@Post('create')
+	async createTeam(@Body() teamDto: teamDto, @Req() req: User, @Res() res: Response) {
+		try {
+			const team = await this.teamService.createTeam(teamDto, req.user.userId);
+			return res.status(HttpStatus.OK).json({ message: 'Tạo team thành công!' });
+		} catch (error) {
+			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	// Lấy thông tin team
 	@Get('teamlist')
@@ -39,6 +55,8 @@ export class TeamController {
 	}
 
 	// Sửa thông tin team
+	@Roles(Role.QTV, Role.User)
+	@UseGuards(JwtAuthGuard)
 	@Patch('update')
 	async updateTeam(@Body() teamDto: teamDto, @Res() res: Response, @Query('id') id: number) {
 		try {

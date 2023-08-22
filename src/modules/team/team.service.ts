@@ -13,6 +13,20 @@ export class TeamService {
 		private teamRepository: Repository<Team>,
 	) {}
 
+	// Tạo team
+	async createTeam(teamDto: teamDto, id: number): Promise<Team> {
+		try {
+			const team = new Team();
+			team.id_user = id;
+			team.team_name = teamDto.team_name;
+			team.team_detail = teamDto.team_detail;
+			const saveTeam = await this.teamRepository.save(team);
+			return saveTeam;
+		} catch (error) {
+			throw new Error(error);
+		}
+	}
+
 	// Lấy thông tin team
 	async getTeamList(id_team: number): Promise<Team> {
 		try {
@@ -29,12 +43,12 @@ export class TeamService {
 	// Sửa thông tin team
 	async updateTeam(id_team: number, teamDto: Partial<teamDto>): Promise<Team> {
 		try {
-			//check team có tồn tài ko
-			const team = await this.teamRepository.findOneBy({id_team: id_team})
-			if(!team){
+			// Check team có tồn tài không
+			const team = await this.teamRepository.findOneBy({ id_team: id_team });
+			if (!team) {
 				throw new Error('Không tìm thấy team');
 			}
-			Object.assign(team,teamDto);
+			Object.assign(team, teamDto);
 			return this.teamRepository.save(team);
 		} catch (error) {
 			throw new Error(error);
