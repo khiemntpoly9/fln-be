@@ -43,6 +43,19 @@ export class TeamController {
 		}
 	}
 
+	// Xoá team
+	@Roles(Role.QTV, Role.User)
+	@UseGuards(JwtAuthGuard)
+	@Get('delete')
+	async deleteTeam(@Res() res: Response, @Query('id') id: number) {
+		try {
+			const deleteTeam = await this.teamService.deleteTeam(id);
+			return res.status(HttpStatus.OK).json({ message: 'Xoá team thành công!' });
+		} catch (error) {
+			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	// Lấy thông tin team
 	@Get('teamlist')
 	async teamList(@Res() res: Response, @Query('id') id: number) {

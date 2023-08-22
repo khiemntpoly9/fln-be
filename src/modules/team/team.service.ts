@@ -27,6 +27,20 @@ export class TeamService {
 		}
 	}
 
+	// Xoá team
+	async deleteTeam(id_team: number): Promise<Team> {
+		try {
+			// Check team có tồn tại không
+			const team = await this.teamRepository.findOneBy({ id_team: id_team });
+			if (!team) {
+				throw new Error('Không tìm thấy team');
+			}
+			return this.teamRepository.remove(team);
+		} catch (error) {
+			throw new Error(error);
+		}
+	}
+
 	// Lấy thông tin team
 	async getTeamList(id_team: number): Promise<Team> {
 		try {
