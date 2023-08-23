@@ -14,6 +14,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MailModule } from './modules/mail/mail.module';
 import { PassportModule } from '@nestjs/passport';
 import { TeamModule } from './modules/team/team.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 /* */
 
 @Module({
@@ -22,6 +23,7 @@ import { TeamModule } from './modules/team/team.module';
 		TypeOrmModule.forRoot(dataSourceOptions),
 		UserModule,
 		TeamModule,
+		CategoriesModule,
 		AuthModule,
 		CloudinaryModule,
 		MailModule,
