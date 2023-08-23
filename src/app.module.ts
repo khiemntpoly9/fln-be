@@ -13,6 +13,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MailModule } from './modules/mail/mail.module';
 import { PassportModule } from '@nestjs/passport';
+import { TeamModule } from './modules/team/team.module';
 /* */
 
 @Module({
@@ -20,6 +21,7 @@ import { PassportModule } from '@nestjs/passport';
 		ConfigModule.forRoot({ isGlobal: true }),
 		TypeOrmModule.forRoot(dataSourceOptions),
 		UserModule,
+		TeamModule,
 		AuthModule,
 		CloudinaryModule,
 		MailModule,
