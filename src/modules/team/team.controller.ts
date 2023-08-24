@@ -11,6 +11,7 @@ import {
 	Res,
 	Patch,
 	Query,
+	Delete,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { TeamService } from './team.service';
@@ -36,7 +37,7 @@ export class TeamController {
 	@Post('create')
 	async createTeam(@Body() teamDto: teamDto, @Req() req: User, @Res() res: Response) {
 		try {
-			const team = await this.teamService.createTeam(teamDto, req.user.userId);
+			await this.teamService.createTeam(teamDto, req.user.userId);
 			return res.status(HttpStatus.OK).json({ message: 'Tạo team thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,10 +47,10 @@ export class TeamController {
 	// Xoá team
 	@Roles(Role.QTV, Role.User)
 	@UseGuards(JwtAuthGuard)
-	@Get('delete')
+	@Delete('delete')
 	async deleteTeam(@Res() res: Response, @Query('id') id: number) {
 		try {
-			const deleteTeam = await this.teamService.deleteTeam(id);
+			await this.teamService.deleteTeam(id);
 			return res.status(HttpStatus.OK).json({ message: 'Xoá team thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,7 +75,7 @@ export class TeamController {
 	async updateTeam(@Body() teamDto: teamDto, @Res() res: Response, @Query('id') id: number) {
 		try {
 			// Lấy data mới
-			const update = await this.teamService.updateTeam(id, teamDto);
+			await this.teamService.updateTeam(id, teamDto);
 			return res.status(HttpStatus.OK).json({ message: 'Cập nhật tài khoản thành công!' });
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
