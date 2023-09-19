@@ -13,29 +13,41 @@ export class NovelService {
 		private novelRepository: Repository<Novel>,
 	) {}
 
-	//Lấy tất cả novel
+	// Lấy tất cả novel
 	async getAllNovel(): Promise<Novel[]> {
 		try {
+			const novellist = await this.novelRepository
+				.createQueryBuilder('novel')
+				.select(['novel.id_novel', 'novel.novel_name', 'novel.novel_detail', 'novel.createdAt'])
+				.getMany();
+			return novellist;
 		} catch (error) {
 			throw new Error(error);
 		}
 	}
-	// lấy chi tiết novel
+	// Lấy chi tiết novel
 	async getOneNovel(): Promise<Novel> {
 		try {
+			const novelDetail = await this.novelRepository
+				.createQueryBuilder('novel')
+				.select(['novel.id_novel', 'novel.novel_name', 'novel.novel_detail', 'novel.createdAt'])
+				.getOne();
+			return novelDetail;
 		} catch (error) {
 			throw new Error(error);
 		}
 	}
 	// Tạo novel
-	async createNovel(): Promise<Novel> {
+	async createNovel(novelDto: novelDto): Promise<Novel> {
 		try {
+			const novel = new Novel();
+			novel.name_novel = novelDto.name_novel;
 		} catch (error) {
 			throw new Error(error);
 		}
 	}
 
-	//sửa novel
+	// Sửa novel
 	async updateNovel(): Promise<Novel> {
 		try {
 		} catch (error) {
@@ -43,7 +55,7 @@ export class NovelService {
 		}
 	}
 
-	//xóa novel
+	// Xóa novel
 	async deleteNovel(): Promise<Novel> {
 		try {
 		} catch (error) {
